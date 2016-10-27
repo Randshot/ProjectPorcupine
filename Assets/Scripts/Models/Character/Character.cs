@@ -33,6 +33,9 @@ public enum Facing
 [MoonSharpUserData]
 public class Character : IXmlSerializable, ISelectable, IContextActionProvider
 {
+	public GoapCharacter goapCharacter;
+	public GoapAgent goapAgent;
+
     /// Name of the Character.
     public string name;
 
@@ -316,6 +319,10 @@ public class Character : IXmlSerializable, ISelectable, IContextActionProvider
     /// Runs every "frame" while the simulation is not paused
     public void Update(float deltaTime)
     {
+		goapCharacter.Tick(deltaTime);
+		goapAgent.Tick(deltaTime);
+
+        /*
         // Run all the global states first so that they can interrupt or queue up new states
         foreach (State globalState in globalStates)
         {
@@ -345,6 +352,7 @@ public class Character : IXmlSerializable, ISelectable, IContextActionProvider
         }
 
         state.Update(deltaTime);
+        */
 
         animation.Update(deltaTime);
 

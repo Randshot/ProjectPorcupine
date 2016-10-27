@@ -71,19 +71,32 @@ public class CharacterSpriteController : BaseSpriteController<Character>
     }
 
     protected override void OnCreated(Character character)
-    {
-        // This creates a new GameObject and adds it to our scene.
-        GameObject char_go = new GameObject();
+	{
+		// This creates a new GameObject and adds it to our scene.
+		GameObject char_go = new GameObject();
 
-        // Add our tile/GO pair to the dictionary.
-        objectGameObjectMap.Add(character, char_go);
+		// Add our tile/GO pair to the dictionary.
+		objectGameObjectMap.Add(character, char_go);
 
-        char_go.name = "Character";
-        char_go.transform.position = new Vector3(character.X, character.Y, character.Z);
-        char_go.transform.SetParent(objectParent.transform, true);
+		char_go.name = "Character";
+		char_go.transform.position = new Vector3(character.X, character.Y, character.Z);
+		char_go.transform.SetParent(objectParent.transform, true);
 
-        SpriteRenderer sr = char_go.AddComponent<SpriteRenderer>();
-        sr.sortingLayerName = "Characters";
+		SpriteRenderer sr = char_go.AddComponent<SpriteRenderer>();
+		sr.sortingLayerName = "Characters";
+
+		// GOAP stuff
+		GoapCharacter goapCharacter = char_go.AddComponent<GoapCharacter>();
+		GoapAgent goapAgent = char_go.AddComponent<GoapAgent>();
+		char_go.AddComponent<Brain>();
+		character.goapCharacter = goapCharacter;
+		character.goapAgent = goapAgent;
+		goapCharacter.character = character;
+		// TODO Add all actions
+		foreach (string key in PrototypeManager.Inventory.Keys)
+		{
+			char_go.AddComponent<CollectInventoryAction>().Init(key);
+		}
 
         // Add material with color replacement shader, and generate color replacement texture
         sr.material = GetMaterial(character);
